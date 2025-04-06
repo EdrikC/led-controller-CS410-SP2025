@@ -49,6 +49,8 @@ cd ledapp; npm run dev
 ```
 From here you can work from within localhost.
 
+---
+
 **Whenever you want to run the emulator you must run these commands EVERY TIME:**
 ```bash
 npm run build && npx cap sync ios && npx cap open ios
