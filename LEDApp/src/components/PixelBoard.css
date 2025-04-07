@@ -1,0 +1,26 @@
+.pixel-board {
+    display: grid;
+    grid-template-columns: repeat(8, 30px);
+    grid-template-rows: repeat(8, 30px);
+    gap: 5px;
+    margin: 1.5rem auto;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+  }
+  
+  .pixel {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #d3d3d3;
+    border: 1px solid #999;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .pixel.on {
+    background-color: #007bff;
+  }
