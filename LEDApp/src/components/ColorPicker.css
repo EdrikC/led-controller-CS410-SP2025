@@ -1,0 +1,22 @@
+.color-picker {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    align-items: center;
+  }
+  
+  .color-option {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid #ccc;
+  }
+  
+  .color-option.selected {
+    border-color: #000;
+  }
+  
+  .color-wheel {
+    margin-left: 10px;
+  }

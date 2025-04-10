@@ -1,26 +1,29 @@
+/* PixelBoard.css */
+.pixel-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 .pixel-board {
-    display: grid;
-    grid-template-columns: repeat(8, 30px);
-    grid-template-rows: repeat(8, 30px);
-    gap: 5px;
-    margin: 1.5rem auto;
-    justify-content: center;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-  }
-  
-  .pixel {
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    background-color: #d3d3d3;
-    border: 1px solid #999;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .pixel.on {
-    background-color: #007bff;
-  }
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  background: #333;
+  padding: 2px;
+  width: fit-content;
+}
+
+.pixel {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #444;
+  cursor: pointer;
+  border-radius: 50%; 
+}
+
+.reset-button {
+  padding: 5px 10px;
+  margin-top: 10px;
+}

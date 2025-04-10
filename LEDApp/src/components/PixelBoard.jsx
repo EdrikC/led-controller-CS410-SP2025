@@ -3,9 +3,9 @@ import './PixelBoard.css';
 
 const SIZE = 8;
 
-function PixelBoard({ onGridChange }) {
+function PixelBoard({ onGridChange, selectedColor }) {
   const emptyGrid = () =>
-    Array(SIZE).fill(null).map(() => Array(SIZE).fill(false));
+    Array(SIZE).fill(null).map(() => Array(SIZE).fill('#000000')); // Default to black
 
   const [grid, setGrid] = useState(emptyGrid());
 
@@ -13,9 +13,12 @@ function PixelBoard({ onGridChange }) {
     onGridChange(grid);
   }, [grid, onGridChange]);
 
-  const togglePixel = (rowIdx, colIdx) => {
+  const setPixelColor = (rowIdx, colIdx) => {
+    const currentColor = grid[rowIdx][colIdx];
+    const newColor = currentColor === selectedColor ? '#000000' : selectedColor;
+    
     const updated = grid.map((row, r) =>
-      row.map((cell, c) => (r === rowIdx && c === colIdx ? !cell : cell))
+      row.map((cell, c) => (r === rowIdx && c === colIdx ? newColor : cell))
     );
     setGrid(updated);
   };
@@ -31,8 +34,9 @@ function PixelBoard({ onGridChange }) {
           row.map((cell, colIdx) => (
             <div
               key={`${rowIdx}-${colIdx}`}
-              className={`pixel ${cell ? 'on' : 'off'}`}
-              onClick={() => togglePixel(rowIdx, colIdx)}
+              className="pixel"
+              style={{ backgroundColor: cell }}
+              onClick={() => setPixelColor(rowIdx, colIdx)}
             />
           ))
         )}
