@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PixelBoard from './components/PixelBoard';
 import ColorPicker from './components/ColorPicker';
+import PresetPanel from './components/PresetPanel';
+
 import './App.css';
 
 function App() {
@@ -28,6 +30,10 @@ function App() {
         onGridChange={setGridData} 
         selectedColor={selectedColor} 
       />
+     <PresetPanel gridData={gridData}
+      setGridData={setGridData} 
+      />
+
       <button onClick={handleSendToMatrix}>Send to Matrix</button>
     </div>
   );

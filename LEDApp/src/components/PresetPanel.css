@@ -1,0 +1,39 @@
+.presets-panel {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .presets-panel input {
+    width: 70%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .presets-panel button {
+    margin: 0.4rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+  
+  .presets-panel ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .presets-panel li {
+    margin-bottom: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
