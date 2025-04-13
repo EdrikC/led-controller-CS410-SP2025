@@ -13,8 +13,19 @@ function PresetPanel({ gridData, setGridData }) {
   }, []);
 
   const savePreset = () => {
-    if (!presetName.trim()) return;
-    const newPreset = { name: presetName.trim(), data: gridData };
+    const trimmedName = presetName.trim();
+    if (!trimmedName) return;
+  
+    const nameExists = presets.some(
+      (p) => p.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+  
+    if (nameExists) {
+      alert("Preset name already exists. Please choose a different name.");
+      return;
+    }
+  
+    const newPreset = { name: trimmedName, data: gridData };
     const updated = [...presets, newPreset];
     setPresets(updated);
     localStorage.setItem('led-presets', JSON.stringify(updated));

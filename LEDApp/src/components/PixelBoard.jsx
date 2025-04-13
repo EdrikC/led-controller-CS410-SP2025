@@ -3,12 +3,18 @@ import './PixelBoard.css';
 
 const SIZE = 8;
 
-function PixelBoard({ onGridChange, selectedColor }) {
+function PixelBoard({ onGridChange, selectedColor,initialGrid  }) {
   const emptyGrid = () =>
     Array(SIZE).fill(null).map(() => Array(SIZE).fill('#000000')); // Default to black
 
-  const [grid, setGrid] = useState(emptyGrid());
+  const [grid, setGrid] = useState(initialGrid || emptyGrid());
 
+  useEffect(() => {
+    if (initialGrid && initialGrid.length === SIZE) {
+      setGrid(initialGrid);
+    }
+  }, [initialGrid]);
+  
   useEffect(() => {
     onGridChange(grid);
   }, [grid, onGridChange]);

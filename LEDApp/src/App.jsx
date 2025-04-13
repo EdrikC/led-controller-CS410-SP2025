@@ -6,7 +6,12 @@ import PresetPanel from './components/PresetPanel';
 import './App.css';
 
 function App() {
-  const [gridData, setGridData] = useState([]);
+  const SIZE = 8;
+  const emptyGrid = () =>
+    Array(SIZE).fill(null).map(() => Array(SIZE).fill('#000000'));
+
+  const [gridData, setGridData] = useState(emptyGrid());
+
   const [selectedColor, setSelectedColor] = useState('#FFFFFF'); 
 
   const handleSendToMatrix = () => {
@@ -29,6 +34,7 @@ function App() {
       <PixelBoard 
         onGridChange={setGridData} 
         selectedColor={selectedColor} 
+        initialGrid={gridData}
       />
      <PresetPanel gridData={gridData}
       setGridData={setGridData} 
