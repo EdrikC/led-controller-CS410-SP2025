@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@capacitor-community/bluetooth-le": "^7.0.0"
+  }
+}

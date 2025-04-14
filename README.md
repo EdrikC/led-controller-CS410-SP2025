@@ -55,3 +55,8 @@ From here you can work from within localhost.
 ```bash
 npm run build && npx cap sync ios && npx cap open ios
 ```
+
+---
+### Bluetooth Info
+
+> **Note**: Bluetooth is not available in the iOS simulator. The initialize call will be rejected with an error "BLE unsupported". You have to test your app on a real device.
