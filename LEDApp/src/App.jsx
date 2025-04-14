@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PixelBoard from './components/PixelBoard';
 import ColorPicker from './components/ColorPicker';
 import PresetPanel from './components/PresetPanel';
+import BluetoothScanner from './components/BluetoothManager';
 
 import './App.css';
 
@@ -41,6 +42,9 @@ function App() {
       />
 
       <button onClick={handleSendToMatrix}>Send to Matrix</button>
+      <div>
+      <BluetoothScanner />
+      </div>
     </div>
   );
 }
