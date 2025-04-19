@@ -2,50 +2,89 @@ import React, { useState, useEffect } from 'react';
 import './PixelBoard.css';
 
 const SIZE = 8;
+const DEFAULT_COLOR = '#000000';
 
-function PixelBoard({ onGridChange, selectedColor,initialGrid  }) {
-  const emptyGrid = () =>
-    Array(SIZE).fill(null).map(() => Array(SIZE).fill('#000000')); // Default to black
+function PixelBoard({ onGridChange, selectedColor, initialGrid }) {
+  const createEmptyGrid = () => Array(SIZE).fill().map(() => Array(SIZE).fill(DEFAULT_COLOR));
+  const [grid, setGrid] = useState(initialGrid || createEmptyGrid());
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [drawMode, setDrawMode] = useState('draw');
 
-  const [grid, setGrid] = useState(initialGrid || emptyGrid());
 
   useEffect(() => {
-    if (initialGrid && initialGrid.length === SIZE) {
-      setGrid(initialGrid);
-    }
+    const preventDefaultTouch = (e) => {
+      if (e.target.closest('.pixel-board')) e.preventDefault();
+    };
+    document.addEventListener('touchmove', preventDefaultTouch, { passive: false });
+    return () => document.removeEventListener('touchmove', preventDefaultTouch);
+  }, []);
+
+
+  useEffect(() => {
+    const handleEnd = () => setIsDrawing(false);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchend', handleEnd);
+    return () => {
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (initialGrid?.length === SIZE) setGrid(initialGrid);
   }, [initialGrid]);
-  
+
   useEffect(() => {
     onGridChange(grid);
   }, [grid, onGridChange]);
 
-  const setPixelColor = (rowIdx, colIdx) => {
-    const currentColor = grid[rowIdx][colIdx];
-    const newColor = currentColor === selectedColor ? '#000000' : selectedColor;
-    
-    const updated = grid.map((row, r) =>
-      row.map((cell, c) => (r === rowIdx && c === colIdx ? newColor : cell))
-    );
-    setGrid(updated);
+  const updatePixel = (rowIdx, colIdx) => {
+    setGrid(prev => prev.map((row, r) =>
+      row.map((cell, c) => {
+        if (r === rowIdx && c === colIdx) {
+          const shouldDraw = drawMode === 'draw' && cell !== selectedColor;
+          const shouldErase = drawMode === 'erase' && cell !== DEFAULT_COLOR;
+          return shouldDraw ? selectedColor : shouldErase ? DEFAULT_COLOR : cell;
+        }
+        return cell;
+      })
+    ));
+    setIsDrawing(true);
   };
 
-  const resetGrid = () => {
-    setGrid(emptyGrid());
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (target?.classList.contains('pixel')) {
+      const [r, c] = target.getAttribute('data-rc').split('-').map(Number);
+      updatePixel(r, c);
+    }
   };
+
+  const resetGrid = () => setGrid(createEmptyGrid());
 
   return (
     <div className="pixel-board-wrapper">
       <div className="pixel-board">
-        {grid.map((row, rowIdx) =>
-          row.map((cell, colIdx) => (
-            <div
-              key={`${rowIdx}-${colIdx}`}
-              className="pixel"
-              style={{ backgroundColor: cell }}
-              onClick={() => setPixelColor(rowIdx, colIdx)}
-            />
-          ))
-        )}
+        {grid.map((row, rowIdx) => row.map((cell, colIdx) => (
+          <div
+            key={`${rowIdx}-${colIdx}`}
+            className="pixel"
+            data-rc={`${rowIdx}-${colIdx}`}
+            style={{ backgroundColor: cell }}
+            onMouseDown={() => {
+              setDrawMode(grid[rowIdx][colIdx] === selectedColor ? 'erase' : 'draw');
+              updatePixel(rowIdx, colIdx);
+            }}
+            onMouseEnter={(e) => isDrawing && e.buttons === 1 && updatePixel(rowIdx, colIdx)}
+            onTouchStart={() => {
+              setDrawMode(grid[rowIdx][colIdx] === selectedColor ? 'erase' : 'draw');
+              updatePixel(rowIdx, colIdx);
+            }}
+            onTouchMove={handleTouchMove}
+          />
+        )))}
       </div>
       <button className="reset-button" onClick={resetGrid}>Reset Grid</button>
     </div>
