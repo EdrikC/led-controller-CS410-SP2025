@@ -1,29 +1,37 @@
-.presets-panel {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    margin-top: 2rem;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .presets-panel input {
-    width: 70%;
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .presets-panel button {
-    margin: 0.4rem;
-    padding: 0.6rem 1rem;
-    font-size: 0.95rem;
-    border-radius: 8px;
-  }
+.pixel-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.pixel-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  background: #333;
+  width: max-content;
+  max-width: 100vw;
+  touch-action: none; /* Prevent pinch/zoom and scrolling */
+  user-select: none; /* Unified user-select */
+  -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.pixel {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #444;
+  cursor: pointer;
+  border-radius: 50%;
+  touch-action: none; /* Ensure no default touch actions */
+  -webkit-tap-highlight-color: transparent; /* Extra safety for iOS */
+}
+
+.reset-button {
+  padding: 5px 10px;
+  margin-top: 10px;
+}
   
   .presets-panel ul {
     list-style: none;
