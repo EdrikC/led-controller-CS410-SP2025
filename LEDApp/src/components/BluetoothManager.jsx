@@ -139,12 +139,14 @@ function BluetoothScanner() {
       );
       console.log("Current characteristic value:", new Uint8Array(readResult.buffer));
   
-      const data = new Uint8Array([[255, 255, 1, 0, 240, 240, 240, 240]]); // Doesnt work yet
+      const newValue = new Uint8Array([0, 0, 0, 0, 0, 255, 255, 255]); 
+      const valueToSend = new DataView(newValue.buffer);
+
       await BleClient.write(
         connectedDevice.deviceId,
         TEST_SERVICE,
         TEST_CHARACTERISTIC,
-        data.buffer
+        valueToSend
       );
       setStatusMessage('Value sent successfully');
       
