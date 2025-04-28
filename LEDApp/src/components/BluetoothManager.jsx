@@ -6,9 +6,15 @@ function BluetoothScanner() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useState([]); // Array of BleDevice objects
-  const [connectedDeviceId, setConnectedDeviceId] = useState(null);
+  const [connectedDevice, setConnectedDevice] = useState(null);
   const [statusMessage, setStatusMessage] = useState('Initialize BLE...');
   const [errorMessage, setErrorMessage] = useState(null);
+
+
+  // For BLE test
+  const TEST_SERVICE = 'E5D1A899-E330-4E38-8F9E-8F3E169239C8';
+  const TEST_CHARACTERISTIC = '87A11349-77EB-46D0-82DB-7C7E0C7A93CA';
+
 
   // Ref to store the connected device ID for cleanup, avoids stale state in cleanup function
   const connectedDeviceRef = useRef(null);
@@ -50,7 +56,7 @@ function BluetoothScanner() {
             await BleClient.disconnect(connectedDeviceRef.current);
             console.log(`Disconnected from ${connectedDeviceRef.current} on cleanup.`);
             connectedDeviceRef.current = null;
-            setConnectedDeviceId(null);
+            setConnectedDevice(null);
           }
         } catch (error) {
           console.error('Error during BLE cleanup:', error);
@@ -70,30 +76,48 @@ function BluetoothScanner() {
     setStatusMessage('Scanning...');
     setIsScanning(true);
 
+    // For Received Signal Strength Indication. Higher = closer
+    const MIN_RSSI = -70; 
+    const NAME_PREFIX = "ESP"; // For when we need to find the ESP
+    const MAX_DEVICES = 10;
+
+
     try {
       // Start scanning
     //   https://github.com/capacitor-community/bluetooth-le?tab=readme-ov-file#requestlescan <- Docs for this section
       await BleClient.requestLEScan(
         {
-           // services: [],
+          // Scans only for the test service UUID for now
+          //  services: [TEST_SERVICE],
            // namePrefix: "MyDevice",
            // scanMode: ScanMode.SCAN_MODE_LOW_LATENCY,
            allowDuplicates: false
         },
         (result) => {
+          if (result.device && result.device.name === 'TestLED') {
+            BleClient.stopLEScan();
+            handleConnect(result.device);
+          }
           if (result?.device) {
-            // Add device to list if it's not already there
             setDevices((prevDevices) => {
-              if (!prevDevices.find(d => d.deviceId === result.device.deviceId)) {
-                return [...prevDevices, result.device];
-              }
-              return prevDevices;
+              // Filter by RSSI
+              if (result.rssi < MIN_RSSI) return prevDevices;
+  
+              // Filter by name prefix (for later)
+              // if (NAME_PREFIX && !result.device.name?.startsWith(NAME_PREFIX)) return prevDevices;
+  
+              // Check if device already exists
+              if (prevDevices.find(d => d.deviceId === result.device.deviceId)) return prevDevices;
+  
+              // Add new device, but limit total number
+              const newDevices = [...prevDevices, result.device];
+              return newDevices.slice(0, MAX_DEVICES);
             });
           }
         }
       );
 
-      setTimeout(stopScan, 15000); // Stop scan after 15 seconds
+      setTimeout(stopScan, 5000); // Stop scan after 5 seconds
 
     } catch (error) {
       console.error('BLE Scan Error:', error);
@@ -102,6 +126,42 @@ function BluetoothScanner() {
       setIsScanning(false);
     }
   };
+
+  const sendTestValue = async () => {
+    if (!connectedDevice) return;
+    
+    try {
+      // Quick test to read the current characteristic value and can see that it holds 8 bytes of data
+      const readResult = await BleClient.read(
+        connectedDevice.deviceId,
+        TEST_SERVICE,
+        TEST_CHARACTERISTIC
+      );
+      console.log("Current characteristic value:", new Uint8Array(readResult.buffer));
+  
+      const newValue = new Uint8Array([0, 0, 0, 0, 0, 255, 255, 255]); 
+      const valueToSend = new DataView(newValue.buffer);
+
+      await BleClient.write(
+        connectedDevice.deviceId,
+        TEST_SERVICE,
+        TEST_CHARACTERISTIC,
+        valueToSend
+      );
+      setStatusMessage('Value sent successfully');
+      
+      // Read again to confirm change
+      const confirmRead = await BleClient.read(
+        connectedDevice.deviceId,
+        TEST_SERVICE,
+        TEST_CHARACTERISTIC
+      );
+      console.log("New characteristic value:", new Uint8Array(confirmRead.buffer));
+    } catch (error) {
+      setStatusMessage(`Send error: ${error.message}`);
+    }
+  };
+
 
   const stopScan = async () => {
     if (!isScanning) return;
@@ -119,7 +179,7 @@ function BluetoothScanner() {
 
   // --- Connection Logic ---
   const handleConnect = async (device) => {
-    if (!isInitialized || connectedDeviceId) return;
+    if (!isInitialized || connectedDevice) return;
 
     if (isScanning) {
       await stopScan(); // Stop scanning before attempting to connect
@@ -134,39 +194,39 @@ function BluetoothScanner() {
         // On disconnect callback
         console.log(`Device ${disconnectedId} disconnected`);
         setStatusMessage(`Device ${disconnectedId} disconnected`);
-        setConnectedDeviceId(null);
+        setConnectedDevice(null);
         connectedDeviceRef.current = null;
       });
 
       console.log(`Connected to ${device.deviceId}`);
       setStatusMessage(`Connected to ${device.name || device.deviceId}`);
-      setConnectedDeviceId(device.deviceId);
-      connectedDeviceRef.current = device.deviceId;
+      setConnectedDevice(device);
+      connectedDeviceRef.current = device;
 
 
     } catch (error) {
       console.error('BLE Connect Error:', error);
       setErrorMessage(`Connection Error: ${error.message || error}`);
       setStatusMessage(`Failed to connect to ${device.name || device.deviceId}`);
-      setConnectedDeviceId(null);
+      setConnectedDevice(null);
       connectedDeviceRef.current = null;
     }
   };
 
   const handleDisconnect = async () => {
-    if (!connectedDeviceId) return;
+    if (!connectedDevice) return;
 
     setStatusMessage('Disconnecting...');
     setErrorMessage(null);
     try {
-      await BleClient.disconnect(connectedDeviceId);
-      console.log(`Disconnect initiated for ${connectedDeviceId}`);
+      await BleClient.disconnect(connectedDevice.deviceId);
+      console.log(`Disconnect initiated for ${connectedDevice}`);
     } catch (error) {
       console.error('BLE Disconnect Error:', error);
       setErrorMessage(`Disconnect Error: ${error.message || error}`);
       setStatusMessage('Failed to disconnect');
       // Force state update if callback didn't fire for some reason
-      setConnectedDeviceId(null);
+      setConnectedDevice(null);
       connectedDeviceRef.current = null;
     }
   };
@@ -182,17 +242,20 @@ function BluetoothScanner() {
       {/* Controls */}
       <div style={styles.controls}>
         {!isScanning ? (
-          <button onClick={startScan} disabled={!isInitialized || !!connectedDeviceId}>
+          <button onClick={startScan} disabled={!isInitialized || !!connectedDevice}>
             Start Scan
           </button>
         ) : (
           <button onClick={stopScan}>Stop Scan</button>
         )}
-        {connectedDeviceId && (
+        {connectedDevice && (
           <button onClick={handleDisconnect} style={styles.disconnectButton}>
             Disconnect
           </button>
         )}
+        {connectedDevice && (
+        <button onClick={sendTestValue}>Send Test Value</button>
+      )}
       </div>
 
       {/* Device List */}
