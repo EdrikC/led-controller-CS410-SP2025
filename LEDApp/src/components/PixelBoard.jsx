@@ -4,7 +4,6 @@ import './PixelBoard.css';
 const SIZE = 8;
 const DEFAULT_COLOR = '#000000';
 
-// Memoized Pixel component
 const Pixel = React.memo(({ color, onTouchStart, onMouseDown }) => (
   <div
     className="pixel"

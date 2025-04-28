@@ -6,7 +6,6 @@ import BluetoothScanner from './components/BluetoothManager';
 
 import './App.css';
 
-// Memoize PixelBoard to avoid unnecessary re-renders
 const MemoizedPixelBoard = React.memo(PixelBoard);
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
       .catch((err) => console.error('Failed to send grid:', err));
   };
 
-  // Throttled brightness control
   const handleBrightnessChange = (event) => {
     const newBrightness = parseInt(event.target.value, 10);
     if (!brightnessTimeout) {
@@ -43,7 +41,7 @@ function App() {
     }
   };
 
-  // Toggle Power ON/OFF
+  
   const togglePower = () => {
     if (isOn) {
       console.log('Turning OFF');
@@ -75,7 +73,7 @@ function App() {
         setGridData={setGridData}
       />
 
-      {/* Brightness Control */}
+     
       <div style={{ margin: '20px' }}>
         <label>Brightness: {brightness}%</label>
         <input 
@@ -87,7 +85,7 @@ function App() {
         />
       </div>
 
-      {/* Power Control */}
+      
       <div style={{ margin: '20px' }}>
         <button onClick={togglePower}>
           {isOn ? 'Turn OFF' : 'Turn ON'}
