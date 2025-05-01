@@ -12,8 +12,8 @@ function BluetoothScanner() {
 
 
   // For BLE test
-  const TEST_SERVICE = 'E5D1A899-E330-4E38-8F9E-8F3E169239C8';
-  const TEST_CHARACTERISTIC = '87A11349-77EB-46D0-82DB-7C7E0C7A93CA';
+  const TEST_SERVICE = '4FAFC201-1FB5-459E-8FCC-C5C9C331914B';
+  const TEST_CHARACTERISTIC = 'BEB5483E-36E1-4688-B7F5-EA07361B26A8';
 
 
   // Ref to store the connected device ID for cleanup, avoids stale state in cleanup function
@@ -137,10 +137,19 @@ function BluetoothScanner() {
         TEST_SERVICE,
         TEST_CHARACTERISTIC
       );
-      console.log("Current characteristic value:", new Uint8Array(readResult.buffer));
+      console.log("Current characteristic value:", new TextDecoder().decode(readResult));
   
-      const newValue = new Uint8Array([0, 0, 0, 0, 0, 255, 255, 255]); 
-      const valueToSend = new DataView(newValue.buffer);
+      const stringToSend = "led 5 5 on";
+
+
+      const encoder = new TextEncoder();
+      const uint8Array = encoder.encode(stringToSend);
+
+      // Create a DataView from the Uint8Array
+      const valueToSend = new DataView(uint8Array.buffer);
+
+      console.log("Attempting to send string:", stringToSend);
+
 
       await BleClient.write(
         connectedDevice.deviceId,
