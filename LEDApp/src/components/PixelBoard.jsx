@@ -16,6 +16,22 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
   const [brightness, setBrightness] = useState(100);
   const [power, setPower] = useState(true);
 
+  const getActiveLEDCoordinates	 = () => {
+    const coords = [];
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (grid[r][c] !== DEFAULT_COLOR) {
+          coords.push([r + 1, c + 1]);
+        }
+      }
+    }
+  
+    const coordString = JSON.stringify(coords);
+    console.log('ON LED Coordinates (UTF-8 string):', coordString);
+    return coordString;
+  };
+  
+
   // Prevent default touch behaviors
   useEffect(() => {
     const preventDefaultTouch = e => {
@@ -44,7 +60,6 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
     onGridChange(grid);
   }, [grid, onGridChange]);
 
-  // Update a pixel once per gesture and only on change
   const updatePixel = (row, col, mode) => {
     const key = `${row}-${col}`;
     if (touchedRef.current.has(key)) return;
@@ -67,7 +82,6 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
     touchedRef.current.add(key);
   };
 
-  // Begin draw/erase
   const startDraw = (row, col) => {
     drawModeRef.current = grid[row][col] === selectedColor ? 'erase' : 'draw';
     touchedRef.current.clear();
@@ -75,7 +89,6 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
     updatePixel(row, col, drawModeRef.current);
   };
 
-  // Handle drag
   const handlePointerMove = e => {
     if (!isDrawing || !boardRef.current) return;
     const rect = boardRef.current.getBoundingClientRect();
@@ -140,6 +153,11 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
         </div>
         <div style={{ marginTop: '1rem' }}>
           <button onClick={() => setPower(p => !p)}>{power ? 'Turn OFF' : 'Turn ON'}</button>
+        </div>
+
+        
+        <div style={{ marginTop: '1rem' }}>
+          <button onClick={getActiveLEDCoordinates}>Log ON Coordinates</button>
         </div>
       </div>
     </div>
