@@ -8,7 +8,12 @@ import './App.css';
 
 const MemoizedPixelBoard = React.memo(PixelBoard);
 
+
 function App() {
+  const [sendToDevice, setSendToDevice] = useState(null);
+  const handleReadyToSend = (sendFunction) => {
+    setSendToDevice(() => sendFunction);
+  };
   const SIZE = 8;
   const emptyGrid = () =>
     Array(SIZE).fill(null).map(() => Array(SIZE).fill('#000000'));
@@ -44,6 +49,7 @@ function App() {
         onGridChange={setGridData}
         selectedColor={selectedColor}
         initialGrid={gridData}
+        onSendCoordinate={sendToDevice}
       />
 
       <PresetPanel

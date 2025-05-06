@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BleClient } from '@capacitor-community/bluetooth-le';
 
 
-function BluetoothScanner() {
+function BluetoothScanner({onReadyToSend}) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useState([]); // Array of BleDevice objects
@@ -127,7 +127,7 @@ function BluetoothScanner() {
     }
   };
 
-  const sendTestValue = async () => {
+  const sendTestValue = async (coordString) => {
     if (!connectedDevice) return;
     
     try {
@@ -139,7 +139,7 @@ function BluetoothScanner() {
       );
       console.log("Current characteristic value:", new TextDecoder().decode(readResult));
   
-      const stringToSend = "led 5 5 on";
+      const stringToSend = `led ${coordString}`; // Format looks like: "led [1,2]"
 
 
       const encoder = new TextEncoder();
@@ -170,6 +170,13 @@ function BluetoothScanner() {
       setStatusMessage(`Send error: ${error.message}`);
     }
   };
+
+  // When a device is connected, pass the send function to the parent
+  useEffect(() => {
+    if (connectedDevice && onReadyToSend) {
+      onReadyToSend(sendValue);
+    }
+  }, [connectedDevice, onReadyToSend]);
 
 
   const stopScan = async () => {
