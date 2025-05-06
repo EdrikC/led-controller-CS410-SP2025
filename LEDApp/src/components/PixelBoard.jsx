@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './PixelBoard.css';
+import { getActiveLEDCoordinates } from './LEDCoordFunction';
 
 const SIZE = 8;
 const DEFAULT_COLOR = '#000000';
@@ -15,21 +16,8 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
   const activePointerRef = useRef(null);
   const [brightness, setBrightness] = useState(100);
   const [power, setPower] = useState(true);
+  const [lastLoggedCoords, setLastLoggedCoords] = useState('');
 
-  const getActiveLEDCoordinates	 = () => {
-    const coords = [];
-    for (let r = 0; r < SIZE; r++) {
-      for (let c = 0; c < SIZE; c++) {
-        if (grid[r][c] !== DEFAULT_COLOR) {
-          coords.push([r + 1, c + 1]);
-        }
-      }
-    }
-  
-    const coordString = JSON.stringify(coords);
-    console.log('ON LED Coordinates (UTF-8 string):', coordString);
-    return coordString;
-  };
   
 
   // Prevent default touch behaviors
@@ -102,6 +90,23 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
     }
   };
 
+  const handleLogCoordinates = () => {
+    const currentCoords = getActiveLEDCoordinates(grid);
+    if (currentCoords !== lastLoggedCoords) {
+      console.log('Logging new coordinates');
+      setLastLoggedCoords(currentCoords);
+      // I WILL SEND TO BT HERE
+    } else {
+      console.log('Coordinates unchanged, not logging');
+    }
+  };
+
+  // Use this effect to automatically log coordinates when the grid changes
+  useEffect(() => {
+    handleLogCoordinates();
+  }, [grid]);
+
+
   return (
     <div className="pixel-board-wrapper">
       <div
@@ -157,7 +162,7 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
 
         
         <div style={{ marginTop: '1rem' }}>
-          <button onClick={getActiveLEDCoordinates}>Log ON Coordinates</button>
+          {/* <button onClick={getActiveLEDCoordinates(grid)}>Log ON Coordinates</button> */}
         </div>
       </div>
     </div>
