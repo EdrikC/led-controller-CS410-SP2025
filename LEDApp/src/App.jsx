@@ -99,7 +99,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{padding: '1rem'}}>
       <h1>8x8 Matrix LED Drawer</h1>
 
       {/* Color Picker */}

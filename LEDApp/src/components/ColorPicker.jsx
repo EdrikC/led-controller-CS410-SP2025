@@ -10,7 +10,7 @@ function ColorPicker({ onColorChange, selectedColor }) {
 
   return (
     <div className="color-picker">
-     <span>Pick Light Color</span>
+     <span>LED Color</span>
       {colors.map((color) => (
         <div
           key={color}

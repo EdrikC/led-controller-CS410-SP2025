@@ -1,6 +1,12 @@
+@font-face {
+  font-family: Roboto;
+  src: url("./assets/Roboto-VariableFont_wdthwght.ttf");
+}
+
+
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Roboto;
   background-color: #f7f9fc;
   display: flex;
   justify-content: center;
@@ -8,6 +14,7 @@ body {
   min-height: 100vh;
   padding-top: 2rem;
   color: #1f1f1f;
+
 }
 
 .App {
@@ -24,7 +31,7 @@ body {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 1.5rem;
 }
 
