@@ -5,6 +5,7 @@
   gap: 10px;
 }
 
+/* The main 8x8 grid layout */
 .pixel-board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -18,6 +19,7 @@
   margin: 0 auto;
 }
 
+/* Each individual pixel (circular cell) */
 .pixel {
   width: 40px;
   height: 40px;
@@ -28,20 +30,22 @@
   -webkit-tap-highlight-color: transparent; /* Extra safety for iOS */
 }
 
+/* Button below the board for resetting grid */
 .reset-button {
   padding: 5px 10px;
   margin-top: 10px;
 }
-  
-  .presets-panel ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .presets-panel li {
-    margin-bottom: 0.6rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
+/* Preset panel styles */
+.presets-panel ul {
+  list-style: none;
+  padding-left: 0;
+}
+/* Each preset item row */
+.presets-panel li {
+  margin-bottom: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
   

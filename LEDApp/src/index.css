@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Link styles */
 a {
   font-weight: 500;
   color: #646cff;
@@ -22,6 +23,7 @@ a:hover {
   color: #535bf2;
 }
 
+/* Base layout styles */
 body {
   margin: 0;
   display: flex;
@@ -30,11 +32,13 @@ body {
   min-height: 100vh;
 }
 
+/* Heading styles */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
+/* Default button styling */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -46,14 +50,19 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
+/* Hover state for buttons */
 button:hover {
   border-color: #646cff;
 }
+
+/* Focus styles for accessibility */
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Light mode overrides */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

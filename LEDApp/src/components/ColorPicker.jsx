@@ -1,7 +1,17 @@
 import React from 'react';
 import './ColorPicker.css';
 
+/**
+ * ColorPicker Component
+ *
+ * Renders a list of preset color options and a color wheel input.
+ * Allows the user to select an LED color for use in the LED grid.
+ *
+ * @param {function} onColorChange - Callback to update selected color
+ * @param {string} selectedColor - The currently selected color (hex string)
+ */
 function ColorPicker({ onColorChange, selectedColor }) {
+  // List of predefined color swatches
   const colors = [
     '#FF0000', '#00FF00', '#0000FF', 
     '#FFFF00', '#FF00FF', '#00FFFF', 

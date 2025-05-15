@@ -8,6 +8,25 @@ import './App.css';
 
 const MemoizedPixelBoard = React.memo(PixelBoard);
 
+/**
+ * App Component
+ *
+ * This is the main application wrapper for the LED Matrix Drawer.
+ * It manages:
+ * - Global state for the LED grid and selected color
+ * - Communication with the ESP32 device via HTTP and Bluetooth
+ * - Integration with child components:
+ *   - PixelBoard (interactive 8x8 LED grid)
+ *   - ColorPicker (choose LED color)
+ *   - PresetPanel (save/load LED patterns)
+ *   - BluetoothScanner (handles BLE communication with ESP32)
+ *
+ * Features:
+ * - Draw/erase on LED grid
+ * - Save/load patterns from local storage
+ * - Send full grid via HTTP to ESP32
+ * - Send individual LED commands via Bluetooth
+ */
 function App() {
   // State for grid data, color, and power
   const SIZE = 8;

@@ -3,7 +3,7 @@
   src: url("./assets/Roboto-VariableFont_wdthwght.ttf");
 }
 
-
+/* Global body styling */
 body {
   margin: 0;
   font-family: Roboto;
@@ -17,10 +17,12 @@ body {
 
 }
 
+/* Wrapper for the React App */
 .App {
   text-align: center;
 }
 
+/* Panel container for grouping controls */
 .panel {
   background: white;
   padding: 2.5rem;
@@ -30,17 +32,20 @@ body {
   margin: 0 auto;
 }
 
+/* Main heading style */
 h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
 }
 
+/* Subheading style */
 h2 {
   font-size: 1.6rem;
   margin-bottom: 1rem;
   color: #333;
 }
 
+/* Button container with spacing */
 .buttons {
   display: flex;
   justify-content: center;
@@ -48,6 +53,7 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+/* Button base styling */
 button {
   background-color: #fff;
   border: 2px solid #007bff;
@@ -59,16 +65,19 @@ button {
   transition: all 0.2s ease-in-out;
 }
 
+/* Button hover effect */
 button:hover {
   background-color: #007bff;
   color: white;
 }
 
+/* Style for range (slider) inputs */
 input[type='range'] {
   width: 100%;
   margin-top: 0.3rem;
 }
 
+/* Dropdown (select) styling */
 select {
   padding: 0.4rem;
   font-size: 1rem;
@@ -77,6 +86,7 @@ select {
   border: 1px solid #ccc;
 }
 
+/* Circle that previews the selected color */
 .color-preview {
   margin-top: 1rem;
   height: 40px;

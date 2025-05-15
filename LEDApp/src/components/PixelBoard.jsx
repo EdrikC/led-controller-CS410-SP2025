@@ -1,10 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './PixelBoard.css'; // Make sure this CSS file exists
+import './PixelBoard.css'; 
 
 const SIZE = 8;
-const DEFAULT_COLOR = '#000000'; // Black
+const DEFAULT_COLOR = '#000000'; 
 
-// Add onPixelClick prop
+/**
+ * PixelBoard Component
+ * 
+ * Renders an interactive 8x8 LED matrix.
+ * Supports drawing, erasing, touch/drag interaction, brightness, and power controls.
+ *
+ * @param {function} onGridChange - Called with updated grid state when any pixel changes
+ * @param {string} selectedColor - Current selected color in HEX (e.g., "#FF0000")
+ * @param {Array} initialGrid - 2D array representing the current grid state
+ * @param {function=} onPixelClick - Optional: Called with (row, col) on pixel interaction
+ * @param {function=} onResetClick - Optional: Called when the grid is reset
+ */
 function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initialGrid, onPixelClick, onResetClick}) {
   const createEmptyGrid = () => Array(SIZE).fill().map(() => Array(SIZE).fill(DEFAULT_COLOR));
 
@@ -18,8 +29,7 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
   const [power, setPower] = useState(true); // State for power control
 
 
-
-  // Prevent default touch behaviors (like scrolling)
+  // Prevents scrolling/zooming while drawing on mobile
   useEffect(() => {
     const boardElement = boardRef.current;
     if (!boardElement) return;
@@ -50,7 +60,7 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
   }, [isDrawing]); // Re-run if drawing state changes? Maybe not necessary
 
 
-  // End drawing on pointerup and clear state
+  // Ends drawing interaction when user lifts finger/mouse or gesture is cancelled
   useEffect(() => {
     const endGesture = () => {
       // Only end gesture if we were drawing with the active pointer
@@ -80,7 +90,7 @@ function PixelBoard({ onGridChange = () => {}, selectedColor = '#FFFFFF', initia
     };
   }, [isDrawing]); // Add isDrawing as a dependency if logic inside relies on its latest value
 
-  // Notify parent of grid changes
+  // Notifies parent when the grid changes
   useEffect(() => {
 
     onGridChange(grid);

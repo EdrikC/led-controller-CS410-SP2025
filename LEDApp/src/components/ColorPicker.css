@@ -1,3 +1,4 @@
+/* Container for the color picker section */
 .color-picker {
     display: flex;
     gap: 5px;
@@ -5,6 +6,7 @@
     align-items: center;
   }
   
+  /* Individual circular color swatches */
   .color-option {
     width: 25px;
     height: 25px;
@@ -12,11 +14,13 @@
     cursor: pointer;
     border: 1px solid #000000;
   }
-  
+
+  /* Highlight the currently selected color */
   .color-option.selected {
     border-color: #000;
   }
   
+  /* The native HTML color input (color wheel) */
   .color-wheel {
     margin-left: 10px;
   }
